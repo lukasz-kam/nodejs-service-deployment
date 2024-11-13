@@ -15,7 +15,7 @@
 
     - name: Copy application files to EC2 instance
       synchronize:
-        src: "{{ playbook_dir }}/../webapp/"
+        src: "{{ playbook_dir }}/../node_app/"
         dest: "{{ app_dir }}"
         rsync_opts:
           - "--delete"
