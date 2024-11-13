@@ -2,7 +2,7 @@ name: Deploy Node.js App to EC2
 on:
   push:
     paths:
-      - 'webapp/**'
+      - 'node_app/**'
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
           echo "${{ secrets.SSH_EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          SERVER_IP=$(ansible-inventory -i inventory_file --host nodejs_instance | jq -r '.ansible_host')
+          SERVER_IP=$(ansible-inventory -i inventory --host nodejs_instance | jq -r '.ansible_host')
 
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
