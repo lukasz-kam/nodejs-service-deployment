@@ -18,7 +18,7 @@ jobs:
           echo "${{ secrets.SSH_EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          SERVER_IP=$(ansible-inventory -i inventory --host nodejs_instance | jq -r '.ansible_host')
+          SERVER_IP=$(awk 'NR > 1 {print $1}' < ansible/inventory)
 
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
@@ -33,4 +33,4 @@ jobs:
           pip install ansible
 
       - name: Run Ansible playbook
-        run: ansible-playbook ansible/deploy_app.yml
+        run: ansible-playbook ansible/deploy_app.yml -i ansible/inventory
