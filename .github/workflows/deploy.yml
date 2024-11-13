@@ -9,7 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Key for Ansible
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          SERVER_IP=$(ansible-inventory -i inventory_file --host nodejs_instance | jq -r '.ansible_host')
+
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
       - name: Set up Python
         uses: actions/setup-python@v2
