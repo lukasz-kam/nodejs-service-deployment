@@ -1,5 +1,6 @@
 name: Deploy Node.js App to EC2
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'node_app/**'
