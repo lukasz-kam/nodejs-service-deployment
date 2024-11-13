@@ -1,5 +1,5 @@
 - name: Deploy Node.js App to EC2
-  hosts: nodejs_server
+  hosts: nodejs_instance
   become: true
   vars:
     app_dir: /home/ec2-user/app
