@@ -1,0 +1,25 @@
+name: Deploy Node.js App to EC2
+on:
+  push:
+    paths:
+      - 'webapp/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code from repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Run Ansible playbook
+        run: ansible-playbook ansible/deploy_app.yml

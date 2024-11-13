@@ -1,0 +1,38 @@
+- name: Deploy Node.js App to EC2
+  hosts: nodejs_server
+  become: true
+  vars:
+    app_dir: /home/ec2-user/app
+
+  tasks:
+    - name: Ensure application directory exists
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+        mode: '0755'
+
+    - name: Copy application files to EC2 instance
+      synchronize:
+        src: "{{ playbook_dir }}/../webapp/"
+        dest: "{{ app_dir }}"
+        rsync_opts:
+          - "--delete"
+
+    - name: Check if node_modules exists
+      stat:
+        path: "{{ app_dir }}/node_modules"
+      register: node_modules_check
+
+    - name: Install dependencies if node_modules is missing
+      command: npm install
+      args:
+        chdir: "{{ app_dir }}"
+      when: not node_modules_check.stat.exists
+
+    - name: Restart application with PM2
+      command: pm2 restart app
+      args:
+        chdir: "{{ app_dir }}"
+      ignore_errors: true

@@ -1,0 +1,9 @@
+- name: Configure server and deploy website
+  hosts: nodejs_instance
+  become: true
+  remote_user: ubuntu
+
+  roles:
+    - role: app
+      tags:
+        - app
